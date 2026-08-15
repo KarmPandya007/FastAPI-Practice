@@ -1,16 +1,37 @@
-# def insert_patient_data(name, age):
-#     if type(name) == str and type(age) == int:
-#         print(name)
-#         print(age)
-#         print("Patient data inserted successfully")
-
-# insert_patient_data("John Doe", "30")
-
+from fastapi import FastAPI
 from pydantic import BaseModel
 
-class Patient(BaseModel):
-    name : str
+app = FastAPI()
+
+# class User(BaseModel) : 
+#     name : str 
+#     age : int
+#     email : str
+
+# @app.post('/create-user')
+# def create_user(user: User) : 
+#     return {
+#         "message" : "User created successfully", 
+#         "data" : user
+#     }
+
+
+
+# Nested Modules : 
+
+class Address(BaseModel) : 
+    city : str 
+    pin_code : int
+
+class User(BaseModel) : 
+    name : str 
     age : int
+    email : str
+    address : Address 
 
-
-print("Hello world")
+@app.post('/create-user')
+def create_user(user: User) : 
+    return {
+        "message" : "User created successfully", 
+        "data" : user
+    }
