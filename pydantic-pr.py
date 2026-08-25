@@ -1,37 +1,33 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import field_validator
+from pydantic import BaseModel, Field, field_validator
+from typing import Optional, Literal
 
-app = FastAPI()
 
-# class User(BaseModel) : 
-#     name : str 
-#     age : int
-#     email : str
+class GenderType(BaseModel):
+    gender : Literal["male", "female", "other"]  = Field(..., description = "Gender of the person")
 
-# @app.post('/create-user')
-# def create_user(user: User) : 
-#     return {
-#         "message" : "User created successfully", 
-#         "data" : user
-#     }
+class Person(BaseModel):
+    name: str = Field(...) # Required field
+    age: int = Field(..., gt=0, lt=120, description= "Age must be greater than 0 and less than 120")
+    email : Optional[str] = None # Optional field (required importing optional from typing)
+    gender : GenderType = Field(..., description = "Gender of the person")
 
 
 
-# Nested Modules : 
+# field_validator:
+# @field_validator
+# @classmethod
+def validate_name(cls, value):
+    return value.title()
 
-class Address(BaseModel) : 
-    city : str 
-    pin_code : int
 
-class User(BaseModel) : 
-    name : str 
-    age : int
-    email : str
-    address : Address 
 
-@app.post('/create-user')
-def create_user(user: User) : 
-    return {
-        "message" : "User created successfully", 
-        "data" : user
-    }
+
+p = Person(
+    name="Mayuresh",
+    age=40,
+    gender=GenderType(gender="other")
+)
+
+print(p)
+
